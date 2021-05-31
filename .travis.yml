@@ -1,25 +1,24 @@
 sudo: required
+language: generic
+
 services:
   - docker
 
 before_install:
-  - docker build -t shijilts/multidocker -f ./client/Dockerfile.dev ./client
+  - docker build -t shijilts/react-test -f ./client/Dockerfile.dev ./client
 
-script: 
-  - docker run -e CI=true shijilts/multidocker npm test
+script:
+  - docker run -e CI=true shijilts/react-test npm test
 
 after_success:
   - docker build -t shijilts/multi-client ./client
-  - docker build -t shijilts/multi-nginx  ./nginx
+  - docker build -t shijilts/multi-nginx ./nginx
   - docker build -t shijilts/multi-server ./server
   - docker build -t shijilts/multi-worker ./worker
-  #login to docker
-  - echo "DOCKER_PASS" | docker login -u "DOCKER_ID"  --password-stdin
-  # push the images to docker hub
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
   - docker push shijilts/multi-client
   - docker push shijilts/multi-nginx
   - docker push shijilts/multi-server
   - docker push shijilts/multi-worker
-
-
-
