@@ -13,5 +13,13 @@ after_success:
   - docker build -t shijilts/multi-nginx  ./nginx
   - docker build -t shijilts/multi-server ./server
   - docker build -t shijilts/multi-worker ./worker
+  #login to docker
+  - echo "DOCKER_PASS" | docker login -u "DOCKER_ID"  --password-stdin
+  # push the images to docker hub
+  - docker push shijilts/multi-client
+  - docker push shijilts/multi-nginx
+  - docker push shijilts/multi-server
+  - docker push shijilts/multi-worker
+
 
 
